@@ -54,19 +54,29 @@ else()
 endif()
 	
 find_package(Vulkan REQUIRED)
-
 option(GLFW_BUILD_EXAMPLES OFF)
 option(GLFW_BUILD_TESTS OFF)
 option(GLFW_BUILD_DOCS OFF)
 option(GLFW_VULKAN_STATIC ON)
 add_subdirectory(vendors/glfw)
 
+option(SAIL_BUILD_EXAMPLES OFF)
+option(SAIL_BUILD_TESTS OFF)
+option(SAIL_BUILD_APPS OFF)
+add_subdirectory(vendors/sail) 
+
+message(--------------)
+message(STATUS ${SailC++_INCLUDE_DIR})
+message(STATUS ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_INCLUDEDIR})
+message(--------------)
+
  include_directories (${PROJECT_NAME} 
     ${ALEX_COMMON_INC}
     ${Vulkan_INCLUDE_DIR}
-    vendors/glfw/include
+    ${glfw_INCLUDE_DIR}
+    ${CMAKE_INSTALL_INCLUDEDIR}/sail/sail-c++
 )
 
 add_executable (${PROJECT_NAME} ${ALEX_COMMON_SRC})
 
-target_link_libraries(${PROJECT_NAME} ${Vulkan_LIBRARIES} glfw)  
+target_link_libraries(${PROJECT_NAME} ${Vulkan_LIBRARIES} glfw sail-c++)  

@@ -9,6 +9,3 @@
 [submodule "vendors/assimp"]
 	path = vendors/assimp
 	url = https://github.com/assimp/assimp.git
-[submodule "vendors/sail"]
-	path = vendors/sail
-	url = https://github.com/HappySeaFox/sail.git
