@@ -18,6 +18,7 @@
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 #include <vulkan/vulkan.h>
+#include <assimp/Importer.hpp>
 
 // [Win32] Our example includes a copy of glfw3.lib pre-compiled with VS2010 to maximize ease of testing and compatibility with old VS compilers.
 // To link with VS2010-era libraries, VS2015+ requires linking with legacy_stdio_definitions.lib, which we do using this pragma.
@@ -358,8 +359,14 @@ int main(int, char**)
     glfwSetErrorCallback(glfw_error_callback);
     if (!glfwInit())
         return 1;
-    sail::log::set_barrier(SAIL_LOG_LEVEL_TRACE);
-
+    Assimp::Importer importer;
+    auto errst = importer.GetErrorString();
+    if (errst == nullptr) {
+        printf("Assimp NO error here\n");
+    }
+    else {
+        printf("Assimp error here\n");
+    }
     glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
     GLFWwindow* window = glfwCreateWindow(1280, 720, "Dear ImGui GLFW+Vulkan example", NULL, NULL);
 
