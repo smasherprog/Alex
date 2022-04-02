@@ -9,13 +9,17 @@ set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 if(MSVC)
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
+    foreach(flag_var
+        CMAKE_CXX_FLAGS CMAKE_CXX_FLAGS_DEBUG CMAKE_CXX_FLAGS_RELEASE
+        CMAKE_CXX_FLAGS_MINSIZEREL CMAKE_CXX_FLAGS_RELWITHDEBINFO)
+    STRING (REGEX REPLACE "/W3" "/W4" ${flag_var} "${${flag_var}}")
+    endforeach(flag_var) 
 else()
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -pedantic")
 endif()
 
 set(ALEX_COMMON_SRC      
-Alex.cpp
+"src/Alex.cpp"
 vendors/imgui/imgui.cpp
 vendors/imgui/imgui_demo.cpp
 vendors/imgui/imgui_draw.cpp
@@ -24,13 +28,18 @@ vendors/imgui/imgui_widgets.cpp
 vendors/imgui/backends/imgui_impl_glfw.cpp
 vendors/imgui/backends/imgui_impl_vulkan.cpp
 )
+message(STATUS ==========>>>>>>>>)
+message(STATUS ${CMAKE_CURRENT_BINARY_DIR}/vendors/imgui/backends)
+message(STATUS ==========>>>>>>>>)
 
 set(ALEX_COMMON_INC   
 vendors/imgui
 vendors/imgui/backends
+${CMAKE_CURRENT_BINARY_DIR}/vendors/sail/include
+vendors/sail/src/libsail-manip
 )
 
-
+add_definitions(-DSAIL_BUILD)
 if(WIN32)
     set(ALEX_PLATFORM_SRC      
 
@@ -65,14 +74,22 @@ option(ASSIMP_NO_EXPORT OFF)
 option(ASSIMP_BUILD_SAMPLES OFF)
 option(ASSIMP_BUILD_TESTS  OFF)
 add_subdirectory(vendors/assimp)
-
+  
+option(SAIL_BUILD_EXAMPLES OFF)
+option(SAIL_BUILD_TESTS OFF)
+option(SAIL_BUILD_APPS OFF)
+option(SAIL_COMBINE_CODECS ON) 
+add_subdirectory(vendors/sail)
+ 
  include_directories (${PROJECT_NAME} 
     ${ALEX_COMMON_INC}
     ${Vulkan_INCLUDE_DIR}
     ${glfw_INCLUDE_DIR}
-    ${assimp_INCLUDE_DIR} 
+    include
+    vendors/
+    vendors/glm
 )
 
 add_executable (${PROJECT_NAME} ${ALEX_COMMON_SRC})
 
-target_link_libraries(${PROJECT_NAME} ${Vulkan_LIBRARIES} glfw)  
+target_link_libraries(${PROJECT_NAME} ${Vulkan_LIBRARIES} glfw assimp sail-c++)  
