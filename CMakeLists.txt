@@ -3,8 +3,7 @@
 #
 cmake_minimum_required (VERSION 3.8)
 
-project ("Alex")
-
+project ("Alex") 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -19,7 +18,6 @@ else()
 endif()
 
 set(ALEX_COMMON_SRC      
-"src/Alex.cpp"
 vendors/imgui/imgui.cpp
 vendors/imgui/imgui_demo.cpp
 vendors/imgui/imgui_draw.cpp
@@ -27,16 +25,14 @@ vendors/imgui/imgui_tables.cpp
 vendors/imgui/imgui_widgets.cpp
 vendors/imgui/backends/imgui_impl_glfw.cpp
 vendors/imgui/backends/imgui_impl_vulkan.cpp
+"src/Alex.cpp" 
+"src/Graphics/Vertex.cpp"
+"src/Graphics/StaticMeshFactory.cpp" 
 )
-message(STATUS ==========>>>>>>>>)
-message(STATUS ${CMAKE_CURRENT_BINARY_DIR}/vendors/imgui/backends)
-message(STATUS ==========>>>>>>>>)
 
 set(ALEX_COMMON_INC   
 vendors/imgui
 vendors/imgui/backends
-${CMAKE_CURRENT_BINARY_DIR}/vendors/sail/include
-vendors/sail/src/libsail-manip
 )
 
 add_definitions(-DSAIL_BUILD)
@@ -75,12 +71,6 @@ option(ASSIMP_BUILD_SAMPLES OFF)
 option(ASSIMP_BUILD_TESTS  OFF)
 add_subdirectory(vendors/assimp)
   
-option(SAIL_BUILD_EXAMPLES OFF)
-option(SAIL_BUILD_TESTS OFF)
-option(SAIL_BUILD_APPS OFF)
-option(SAIL_COMBINE_CODECS ON) 
-add_subdirectory(vendors/sail)
- 
  include_directories (${PROJECT_NAME} 
     ${ALEX_COMMON_INC}
     ${Vulkan_INCLUDE_DIR}
@@ -88,8 +78,10 @@ add_subdirectory(vendors/sail)
     include
     vendors/
     vendors/glm
+    vendors/stb
+    assimp/include/
 )
 
 add_executable (${PROJECT_NAME} ${ALEX_COMMON_SRC})
 
-target_link_libraries(${PROJECT_NAME} ${Vulkan_LIBRARIES} glfw assimp sail-c++)  
+target_link_libraries(${PROJECT_NAME} ${Vulkan_LIBRARIES} glfw assimp)  
